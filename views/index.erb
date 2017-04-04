@@ -1,0 +1,11 @@
+<html>
+<body>
+  <h1>Användare</h1>
+  <ol>
+    <% users.each do |user| %>
+      <li><a href="<%= "/anvandare/#{user}" %>"><%= user %></a></li>
+    <% end %>
+  </ol>
+  <a href="ny-anvandare">Lägg till användare</a>
+</body>
+</html>
