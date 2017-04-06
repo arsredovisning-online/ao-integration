@@ -53,6 +53,7 @@ end
 
 
 get '/anvandare/:email' do
+  session[:user_email] = params[:email]
   erb :user, locals: { user: params[:email], connected: user_connected?(params[:email]) }
 end
 
@@ -64,7 +65,7 @@ end
 post '/ny-anvandare' do
   add_user(params[:email])
   redirect to('/')
-  end
+end
 
 post '/skapa-konto/:email' do
   user_email = params[:email]
@@ -87,4 +88,12 @@ post '/skapa-rapport/:email' do
                                                       {'Access-Token' => access_token_for(user_email)})
   report_url = JSON.parse(res.body)['report_url']
   redirect to(report_url)
+end
+
+get '/autentiserad' do
+  user_email = session[:user_email]
+  res = rest_resource('token').post({grant_type: 'authorization_code', code: params[:code]}.to_json, {content_type: :json, accept: :json})
+  access_token = JSON.parse(res.body)['access_token']
+  add_access_token(user_email, access_token)
+  redirect to("/anvandare/#{user_email}")
 end

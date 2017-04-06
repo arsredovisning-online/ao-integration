@@ -1,22 +1,22 @@
-<html>
-<body>
-  <a href="/">Alla användare</a>
-  <h1>Användare: <%= user %></h1>
-  <% if session[:message] %>
+<a href="/">Alla användare</a>
+<h1>Användare: <%= user %></h1>
+<% if session[:message] %>
     <p><%= session.delete(:message) %></p>
-  <% end %>
-  <% if connected %>
+<% end %>
+<% if connected %>
     <h2>Användaren har en koppling till Årsredovisning Online</h2>
     <form action="/skapa-rapport/<%= user %>" method="post" enctype='multipart/form-data' target="_blank">
-      <label for="sie_file">Välj SIE-fil</label>
-      <input type="file" id="sie_file" name="sie_file">
-      <button type="submit">Skapa rapport</button>
+      <div class="form-group">
+        <label for="sie_file">Välj SIE-fil</label>
+        <input type="file" id="sie_file" name="sie_file">
+      </div>
+      <button type="submit" class="btn btn-primary">Skapa rapport</button>
     </form>
-  <% else %>
+<% else %>
     <h2>Användaren har ingen koppling till Årsredovisning Online</h2>
     <form action="/skapa-konto/<%= user %>" method="post">
-      <button type="submit">Skapa konto hos Årsredovisning Online</button>
+      <button type="submit" class="btn btn-primary">Skapa konto hos Årsredovisning Online</button>
     </form>
-  <% end %>
-</body>
-</html>
+    <a href="<%= ENV['API_HOST'] %>/access?client_id=<%= ENV['CLIENT_ID'] %>&user_email=<%= user %>&redirect_uri=<%= request.base_url %>/autentiserad">Skapa
+      koppling</a>
+<% end %>
