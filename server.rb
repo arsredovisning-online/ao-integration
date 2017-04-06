@@ -62,6 +62,14 @@ get '/ny-anvandare' do
   erb :new_user
 end
 
+get '/login/:email' do
+  user_email = params[:email]
+  # Access token is passed as an 'Access-Token' header
+  res = rest_resource('login').get({'Access-Token' => access_token_for(user_email)})
+  url = JSON.parse(res.body)['url']
+  redirect to(url)
+end
+
 post '/ny-anvandare' do
   add_user(params[:email])
   redirect to('/')

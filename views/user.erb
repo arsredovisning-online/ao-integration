@@ -12,6 +12,7 @@
       </div>
       <button type="submit" class="btn btn-primary">Skapa rapport</button>
     </form>
+    <a href="/login/<%= user %>">Logga in i Årsredovisning Online</a>
 <% else %>
     <h2>Användaren har ingen koppling till Årsredovisning Online</h2>
     <form action="/skapa-konto/<%= user %>" method="post">
