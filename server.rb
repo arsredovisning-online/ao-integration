@@ -78,7 +78,7 @@ end
 post '/skapa-konto/:email' do
   user_email = params[:email]
   begin
-    res = rest_resource('create_or_update_report').post({user_email: user_email}.to_json, {content_type: :json, accept: :json})
+    res = rest_resource('create_account').post({user_email: user_email}.to_json, {content_type: :json, accept: :json})
     access_token = JSON.parse(res.body)['access_token']
     add_access_token(user_email, access_token)
   rescue Exception
