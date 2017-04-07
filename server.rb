@@ -100,7 +100,10 @@ end
 
 get '/autentiserad' do
   user_email = session[:user_email]
-  res = rest_resource('token').post({grant_type: 'authorization_code', code: params[:code]}.to_json, {content_type: :json, accept: :json})
+  res = rest_resource('token').post({grant_type: 'authorization_code',
+                                     code: params[:code],
+                                     redirect_uri: "#{request.base_url}/autentiserad"}.to_json,
+                                    {content_type: :json, accept: :json})
   access_token = JSON.parse(res.body)['access_token']
   add_access_token(user_email, access_token)
   redirect to("/anvandare/#{user_email}")
