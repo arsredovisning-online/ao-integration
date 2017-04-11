@@ -10,7 +10,7 @@ enable :sessions
 # DB
 ###########################
 
-DB = { 'user@example.com' => '', '2@example.com' => 'mSuUscPKiZAj5xG84GavQZTx'}
+DB = { 'user@example.com' => '' }
 
 def users
   DB.keys
