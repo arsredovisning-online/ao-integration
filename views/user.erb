@@ -10,14 +10,24 @@
         <label for="sie_file">Välj SIE-fil</label>
         <input type="file" id="sie_file" name="sie_file">
       </div>
-      <button type="submit" class="btn btn-primary">Skapa rapport</button>
+      <% if report_id %>
+          <button type="submit" class="btn btn-primary">Uppdatera rapport</button>
+      <% else %>
+          <button type="submit" class="btn btn-primary">Skapa rapport</button>
+      <% end %>
     </form>
-    <a href="/login/<%= user %>">Logga in i Årsredovisning Online</a>
+    <p>
+      <a href="/login/<%= user %>">Logga in i Årsredovisning Online</a>
+    </p>
+    <% if report_id %>
+        <p>
+          <a href="/hamta-verifikationer/<%= user %>">Hämta verifikationer</a>
+        </p>
+    <% end %>
 <% else %>
     <h2>Användaren har ingen koppling till Årsredovisning Online</h2>
     <form action="/skapa-konto/<%= user %>" method="post">
       <button type="submit" class="btn btn-primary">Skapa konto hos Årsredovisning Online</button>
     </form>
-    <a href="<%= ENV['API_HOST'] %>/access?client_id=<%= ENV['CLIENT_ID'] %>&user_email=<%= user %>&redirect_uri=<%= request.base_url %>/autentiserad">Skapa
-      koppling</a>
+    <a href="<%= ENV['API_HOST'] %>/access?client_id=<%= ENV['CLIENT_ID'] %>&user_email=<%= user %>&redirect_uri=<%= request.base_url %>/autentiserad">Skapa koppling</a>
 <% end %>

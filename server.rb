@@ -11,27 +11,37 @@ enable :sessions
 # DB
 ###########################
 
-DB = { 'user@example.com' => '' }
+DB = Hash.new {|h, k| h[k] = {}}
 
 def users
   DB.keys
 end
 
 def add_user(email)
-  DB[email] = ''
-end
-
-def add_access_token(email, token)
-  DB[email] = token
-end
-
-def access_token_for(email)
   DB[email]
 end
 
-def user_connected?(email)
-  DB[email] != ''
+def add_access_token(email, token)
+  DB[email][:token] = token
 end
+
+def access_token_for(email)
+  DB[email][:token]
+end
+
+def user_connected?(email)
+  access_token_for(email)
+end
+
+def set_report_id(email, report_id)
+  DB[email][:report_id] = report_id
+end
+
+def report_id_for(email)
+  DB[email][:report_id]
+end
+
+add_user('user@example.com')
 
 ###########################
 # Rest
@@ -43,19 +53,19 @@ def rest_resource(path)
   RestClient::Resource.new(uri.to_s, ENV['CLIENT_ID'], ENV['CLIENT_SECRET'])
 end
 
-
 ###########################
 # Routes
 ###########################
 
 get '/' do
-  erb :index, locals: { users: users }
+  erb :index, locals: {users: users}
 end
 
 
 get '/anvandare/:email' do
-  session[:user_email] = params[:email]
-  erb :user, locals: { user: params[:email], connected: user_connected?(params[:email]) }
+  email = params[:email]
+  session[:user_email] = email
+  erb :user, locals: {user: email, connected: user_connected?(email), report_id: report_id_for(email)}
 end
 
 
@@ -98,7 +108,10 @@ post '/skapa-rapport/:email' do
     # Access token is passed as an 'Access-Token' header
     res = rest_resource('create_or_update_report').post({file: File.new(utf8_encode_sie_file.path)},
                                                         {'Access-Token' => access_token_for(user_email)})
-    report_url = JSON.parse(res.body)['report_url']
+    body = JSON.parse(res.body)
+    report_url = body['report_url']
+    report_id = body['report_id']
+    set_report_id(user_email, report_id)
     redirect to(report_url)
   end
 end
@@ -112,4 +125,17 @@ get '/autentiserad' do
   access_token = JSON.parse(res.body)['access_token']
   add_access_token(user_email, access_token)
   redirect to("/anvandare/#{user_email}")
+end
+
+get '/hamta-verifikationer/:email' do
+  user_email = params[:email]
+  report_id = report_id_for(user_email)
+
+  begin
+    res = rest_resource("get_vouchers?report_id=#{report_id}}").get({'Access-Token' => access_token_for(user_email)})
+
+    erb :vouchers, locals: {user: user_email, content: res.body.encode('utf-8', 'ibm437')}
+  rescue Exception => e
+    erb :vouchers, locals: {user: user_email, content: e.inspect.force_encoding('utf-8')}
+  end
 end
