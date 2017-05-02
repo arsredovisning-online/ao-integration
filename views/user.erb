@@ -21,6 +21,9 @@
     </p>
     <% if report_id %>
         <p>
+          <a href="/hamta-status/<%= user %>">Hämta status</a>
+        </p>
+        <p>
           <a href="/hamta-verifikationer/<%= user %>">Hämta verifikationer</a>
         </p>
     <% end %>
@@ -31,3 +34,7 @@
     </form>
     <a href="<%= ENV['API_HOST'] %>/access?client_id=<%= ENV['CLIENT_ID'] %>&user_email=<%= user %>&redirect_uri=<%= request.base_url %>/autentiserad">Skapa koppling</a>
 <% end %>
+
+<p>
+<a href="<%= "/anvandare/#{user}" %>">Ladda om</a>
+</p>

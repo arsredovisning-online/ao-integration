@@ -127,6 +127,19 @@ get '/autentiserad' do
   redirect to("/anvandare/#{user_email}")
 end
 
+get '/hamta-status/:email' do
+  user_email = params[:email]
+  report_id = report_id_for(user_email)
+
+  begin
+    res = rest_resource("get_status?report_id=#{report_id}}").get({'Access-Token' => access_token_for(user_email)})
+
+    erb :vouchers, locals: {user: user_email, content: res.body.force_encoding('utf-8')}
+  rescue Exception => e
+    erb :vouchers, locals: {user: user_email, content: e.inspect.force_encoding('utf-8')}
+  end
+end
+
 get '/hamta-verifikationer/:email' do
   user_email = params[:email]
   report_id = report_id_for(user_email)
