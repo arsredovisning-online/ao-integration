@@ -81,6 +81,15 @@ get '/login/:email' do
   redirect to(url)
 end
 
+get '/anvandare/:email/till_rapport/:report_id' do
+  user_email = params[:email]
+  report_id = params[:report_id]
+  # Access token is passed as an 'Access-Token' header
+  res = rest_resource('report').get({'Access-Token' => access_token_for(user_email), params: { report_id: report_id }})
+  url = JSON.parse(res.body)['report_url']
+  redirect to(url)
+end
+
 post '/ny-anvandare' do
   add_user(params[:email])
   redirect to('/')
