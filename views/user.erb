@@ -35,7 +35,7 @@
     <form action="/skapa-konto/<%= user %>" method="post">
       <button type="submit" class="btn btn-primary">Skapa konto hos Årsredovisning Online</button>
     </form>
-    <a href="<%= ENV['API_HOST'] %>/access?client_id=<%= ENV['CLIENT_ID'] %>&user_email=<%= user %>&redirect_uri=<%= request.base_url %>/autentiserad">Skapa koppling</a>
+    <a href="<%= ENV['API_HOST'] %>/access?client_id=<%= ENV['CLIENT_ID'] %>&user_email=<%= user %>&response_type=code&redirect_uri=<%= request.base_url %>/autentiserad">Skapa koppling</a>
 <% end %>
 
 <p>
