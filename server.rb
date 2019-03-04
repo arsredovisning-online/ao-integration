@@ -114,9 +114,15 @@ post '/skapa-rapport/:email' do
     utf8_encode_sie_file.write(sie_file.read.encode('UTF-8', 'IBM437'))
     utf8_encode_sie_file.close
 
-    # Access token is passed as an 'Access-Token' header
-    res        = rest_resource('create_or_update_report').post({ file: File.new(utf8_encode_sie_file.path) },
-                                                               { 'Access-Token' => access_token_for(user_email) })
+    begin
+      # Access token is passed as an 'Access-Token' header
+      res = rest_resource('create_or_update_report').post({ file: File.new(utf8_encode_sie_file.path) },
+                                                          { 'Access-Token' => access_token_for(user_email) })
+    rescue RestClient::ExceptionWithResponse => e
+      raise if e.http_code >= 500
+      return erb :error, locals: { exception: e }
+    end
+
     body       = JSON.parse(res.body)
     report_url = body['report_url']
     report_id  = body['report_id']

@@ -1,0 +1,13 @@
+<h1><%= exception %></h1>
+
+<p>
+  Anropet misslyckades.
+</p>
+
+<pre>
+<% if exception.response.headers[:content_type] =~ %r(application/json) %>
+<%= JSON.pretty_generate(JSON.parse(exception.response)) %>
+<% else %>
+<%= exception.response %>
+<% end %>
+</pre>
