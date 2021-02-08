@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
-ruby "2.6.3"
+ruby "2.7.2"
 
-gem 'sinatra', '~> 2.0'
-gem 'dotenv', '~> 2.2'
-gem 'rest-client', '~> 2.0'
+gem 'sinatra'
+gem 'dotenv'
+gem 'rest-client'
