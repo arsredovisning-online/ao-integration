@@ -110,25 +110,22 @@ end
 post '/skapa-rapport/:email' do
   user_email = params[:email]
   sie_file   = params[:sie_file][:tempfile]
-  Tempfile.open('sie_file.se') do |utf8_encode_sie_file|
-    utf8_encode_sie_file.write(sie_file.read.encode('UTF-8', 'IBM437'))
-    utf8_encode_sie_file.close
 
-    begin
-      # Access token is passed as an 'Access-Token' header
-      res = rest_resource('create_or_update_report').post({ file: File.new(utf8_encode_sie_file.path) },
-                                                          { 'Access-Token' => access_token_for(user_email) })
-    rescue RestClient::ExceptionWithResponse => e
-      raise if e.http_code >= 500
-      return erb :error, locals: { exception: e }
-    end
-
-    body       = JSON.parse(res.body)
-    report_url = body['report_url']
-    report_id  = body['report_id']
-    set_report_id(user_email, report_id)
-    redirect to(report_url)
+  begin
+    # Access token is passed as an 'Access-Token' header
+    res = rest_resource('create_or_update_report').post(
+      { file: sie_file, },
+      { 'Access-Token' => access_token_for(user_email) })
+  rescue RestClient::ExceptionWithResponse => e
+    raise if e.http_code >= 500
+    return erb :error, locals: { exception: e }
   end
+
+  body       = JSON.parse(res.body)
+  report_url = body['report_url']
+  report_id  = body['report_id']
+  set_report_id(user_email, report_id)
+  redirect to(report_url)
 end
 
 get '/autentiserad' do
