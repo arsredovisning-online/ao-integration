@@ -10,6 +10,13 @@
         <label for="sie_file">Välj SIE-fil</label>
         <input type="file" id="sie_file" name="sie_file">
       </div>
+      <div class="form-group">
+        <label for="report_type">Rapporttyp</label>
+        <select id="report_type" name="report_type">
+          <option value="annual_report">Årsredovisning</option>
+          <option value="sole_trader">Enskild näringsidkare</option>
+        </select>
+      </div>
       <% if report_id %>
           <button type="submit" class="btn btn-primary">Uppdatera rapport</button>
       <% else %>
@@ -35,7 +42,7 @@
     <form action="/skapa-konto/<%= user %>" method="post">
       <button type="submit" class="btn btn-primary">Skapa konto hos Årsredovisning Online</button>
     </form>
-    <a href="<%= ENV['API_HOST'] %>/access?client_id=<%= ENV['CLIENT_ID'] %>&user_email=<%= user %>&response_type=code&redirect_uri=<%= request.base_url %>/autentiserad">Skapa koppling</a>
+    <a href="/initiera-koppling/<%= user %>">Skapa koppling</a>
 <% end %>
 
 <p>
